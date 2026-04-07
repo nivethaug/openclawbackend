@@ -15,8 +15,8 @@
 FROM vllm/vllm-openai:v0.6.6
 
 # Update existing packages for GLM compatibility
-# Use pip upgrade instead of install to handle dependency conflicts
-RUN pip install --upgrade 'transformers<5,>=4.56.0'
+# Use --no-deps to respect version constraints without upgrading deps
+RUN pip install --no-deps 'transformers<5,>=4.56.0'
 
 # Pre-download the GPTQ-4bit model from HuggingFace (~16GB)
 # Model is ungated - no HF_TOKEN needed
