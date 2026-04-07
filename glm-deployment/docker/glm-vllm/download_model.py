@@ -12,8 +12,7 @@ def download_with_retries(repo_id, cache_dir, max_retries=3):
             cache_path = snapshot_download(
                 repo_id,
                 cache_dir=cache_dir,
-                resume_download=True,
-                timeout=300  # 5 minute timeout
+                resume_download=True
             )
             print(f'Downloaded to cache: {cache_path}')
             return cache_path
