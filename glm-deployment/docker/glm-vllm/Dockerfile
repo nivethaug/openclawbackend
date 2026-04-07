@@ -19,17 +19,15 @@ RUN pip install --no-cache-dir 'git+https://github.com/huggingface/transformers.
 
 # Pre-download the GPTQ-4bit model from HuggingFace (~16GB)
 # Model is ungated - no HF_TOKEN needed
-RUN pip install huggingface_hub
+RUN pip install --no-cache-dir huggingface_hub
 RUN mkdir -p /opt/glm-model
-RUN python3 -c "
+RUN python3 <<'PY'
 from huggingface_hub import snapshot_download
 import shutil, os
 
-# Download to cache
 cache_path = snapshot_download('FayeQuant/GLM-4.7-Flash-GPTQ-4bit', cache_dir='/tmp/hf_cache')
 print(f'Downloaded to cache: {cache_path}')
 
-# Copy to stable path
 for f in os.listdir(cache_path):
     src = os.path.join(cache_path, f)
     dst = os.path.join('/opt/glm-model', f)
@@ -37,7 +35,7 @@ for f in os.listdir(cache_path):
         shutil.copytree(src, dst)
     else:
         shutil.copy2(src, dst)
-"
+PY
 RUN rm -rf /tmp/hf_cache
 
 # Verify model config exists
