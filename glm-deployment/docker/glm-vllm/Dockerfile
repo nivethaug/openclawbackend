@@ -15,7 +15,8 @@
 FROM vllm/vllm-openai:v0.6.6
 
 # Update existing packages for GLM compatibility
-# Use --no-deps to respect version constraints without upgrading deps
+# Install compatible tokenizers first (required by transformers 4.57.6)
+RUN pip install --no-cache-dir 'tokenizers>=0.22.0,<=0.23.0'
 RUN pip install --no-deps 'transformers<5,>=4.56.0'
 
 # Pre-download the GPTQ-4bit model from HuggingFace (~16GB)
