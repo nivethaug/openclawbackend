@@ -1,4 +1,4 @@
-# GLM-4.7-Flash GPTQ 4-bit — vLLM Docker Image
+# GLM-4.7-Flash GPTQ 4-bit - vLLM Docker Image
 # Pre-bakes the model + latest transformers into the image
 # Eliminates: HF download time, transformers version mismatch, speculator crash
 #
@@ -18,7 +18,7 @@ FROM vllm/vllm-openai:latest
 RUN pip install --no-cache-dir 'git+https://github.com/huggingface/transformers.git'
 
 # Pre-download the GPTQ-4bit model from HuggingFace (~16GB)
-# Model is ungated — no HF_TOKEN needed
+# Model is ungated - no HF_TOKEN needed
 RUN mkdir -p /opt/glm-model && \
     python3 -c "
 from huggingface_hub import snapshot_download
@@ -47,7 +47,7 @@ for f in sorted(os.listdir('/opt/glm-model'))[:20]:
 " && rm -rf /tmp/hf_cache
 
 # Verify model config exists
-RUN test -f /opt/glm-model/config.json && echo "✅ Model ready at /opt/glm-model"
+RUN test -f /opt/glm-model/config.json && echo "Model ready at /opt/glm-model"
 
 # Default vLLM entrypoint args (override via RunPod dockerArgs)
 CMD ["--model", "/opt/glm-model", \
