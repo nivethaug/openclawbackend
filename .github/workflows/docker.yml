@@ -25,8 +25,8 @@ jobs:
       - name: Build and push GLM vLLM image
         uses: docker/build-push-action@v6
         with:
-          context: ./docker/glm-vllm
-          file: ./docker/glm-vllm/Dockerfile
+          context: ./glm-deployment/docker/glm-vllm
+          file: ./glm-deployment/docker/glm-vllm/Dockerfile
           tags: "${{ vars.DOCKER_USER }}/glm-vllm:4.7-flash-4bit"
           push: ${{ github.event_name != 'pull_request' }}
           # For pull requests, export results to the build cache.
