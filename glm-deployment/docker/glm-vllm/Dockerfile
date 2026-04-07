@@ -14,11 +14,9 @@
 
 FROM vllm/vllm-openai:latest
 
-# Install git (required for pip install from git URLs)
-RUN apt-get update && apt-get install -y --no-install-recommends git
-
 # Upgrade to transformers 5.x (required for glm4_moe_lite architecture)
-RUN pip install --no-cache-dir 'git+https://github.com/huggingface/transformers.git'
+# Note: vLLM 0.19.0 requires transformers<5,>=4.56.0
+RUN pip install --no-cache-dir 'transformers==5.0.0'
 
 # Pre-download the GPTQ-4bit model from HuggingFace (~16GB)
 # Model is ungated - no HF_TOKEN needed
