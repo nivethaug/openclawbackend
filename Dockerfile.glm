@@ -1,0 +1,46 @@
+# ─── GLM-4.7-Flash vLLM Server ─────────────────────────────
+# Docker image with model baked in — no network volume needed.
+# Deploys to ANY RunPod region with available GPUs.
+#
+# Build:
+#   docker build -t glm-vllm:4.7-flash-4bit -f Dockerfile.glm .
+#
+# Push to Docker Hub (or GHCR):
+#   docker tag glm-vllm:4.7-flash-4bit YOURUSER/glm-vllm:4.7-flash-4bit
+#   docker push YOURUSER/glm-vllm:4.7-flash-4bit
+#
+# The model is ~5GB GPTQ 4-bit. Container disk must be >= 15GB.
+# ─────────────────────────────────────────────────────────────
+
+FROM vllm/vllm-openai:latest
+
+# Install huggingface_hub for model download
+RUN pip install --no-cache-dir huggingface_hub
+
+# Model configuration
+ENV MODEL_REPO="zai-org/GLM-4.7-Flash"
+ENV MODEL_REVISION="gptq-4bit"
+ENV MODEL_DIR="/app/models/glm-4.7-flash-4bit"
+
+# Download model during build (baked into image)
+# This is the GPTQ 4-bit quantized version (~5GB)
+RUN echo "📥 Downloading GLM-4.7-Flash GPTQ 4-bit model..." && \
+    python3 -c "from huggingface_hub import snapshot_download; \
+    snapshot_download('${MODEL_REPO}', revision='${MODEL_REVISION}', \
+    local_dir='${MODEL_DIR}', local_dir_use_symlinks=False)" && \
+    echo "✅ Model downloaded to ${MODEL_DIR}" && \
+    ls -lh ${MODEL_DIR}/
+
+# Copy startup script
+COPY start_glm.sh /app/start_glm.sh
+RUN chmod +x /app/start_glm.sh
+
+# Expose vLLM port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+    CMD curl -f http://localhost:8000/v1/models || exit 1
+
+# Start vLLM with the baked-in model
+ENTRYPOINT ["/bin/bash", "/app/start_glm.sh"]
