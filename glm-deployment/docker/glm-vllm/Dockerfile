@@ -23,10 +23,10 @@ RUN pip install --no-deps 'transformers<5,>=4.56.0'
 RUN pip install --no-cache-dir huggingface_hub
 RUN mkdir -p /opt/glm-model
 COPY download_model.py /tmp/download_model.py
-RUN python3 /tmp/download_model.py && rm -rf /tmp/hf_cache
+RUN python3 /tmp/download_model.py 2>&1 && rm -rf /tmp/hf_cache || { echo "Download failed"; exit 1; }
 
 # Verify model config exists
-RUN test -f /opt/glm-model/config.json && echo "Model ready at /opt/glm-model"
+RUN test -f /opt/glm-model/config.json && echo "Model ready at /opt/glm-model" || { echo "Model files not found"; exit 1; }
 
 # Default vLLM entrypoint args (override via RunPod dockerArgs)
 CMD ["--model", "/opt/glm-model", "--tensor-parallel-size", "1", "--max-model-len", "4096", "--gpu-memory-utilization", "0.92", "--host", "0.0.0.0", "--port", "8000", "--trust-remote-code"]
