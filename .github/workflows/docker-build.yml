@@ -19,9 +19,6 @@ jobs:
           password: ${{ secrets.DOCKER_PAT }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-        with:
-          driver: cloud
-          endpoint: "vivek8912/glm"
       - name: Build and push GLM vLLM image
         uses: docker/build-push-action@v6
         with:
