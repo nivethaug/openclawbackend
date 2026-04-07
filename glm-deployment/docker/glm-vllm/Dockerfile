@@ -15,7 +15,7 @@
 FROM vllm/vllm-openai:latest
 
 # Install git (required for pip install from git URLs)
-RUN apk add --no-cache git
+RUN apt-get update && apt-get install -y --no-install-recommends git
 
 # Upgrade to transformers 5.x (required for glm4_moe_lite architecture)
 RUN pip install --no-cache-dir 'git+https://github.com/huggingface/transformers.git'
