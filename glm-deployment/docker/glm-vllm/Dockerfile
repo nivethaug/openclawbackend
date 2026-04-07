@@ -12,7 +12,7 @@
 #
 # Image size: ~20GB (base vllm ~10GB + model ~16GB)
 
-FROM vllm/vllm-openai:latest
+FROM vllm/vllm-openai:v0.6.6
 
 # Update existing packages for GLM compatibility
 # Use pip upgrade instead of install to handle dependency conflicts
