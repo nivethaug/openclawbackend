@@ -24,7 +24,7 @@ RUN pip install --no-deps 'transformers<5,>=4.56.0'
 RUN pip install --no-cache-dir huggingface_hub
 RUN mkdir -p /opt/glm-model
 COPY download_model.py /tmp/download_model.py
-RUN python3 /tmp/download_model.py 2>&1 && rm -rf /tmp/hf_cache || { echo "Download failed"; exit 1; }
+RUN timeout 1800 python3 /tmp/download_model.py 2>&1 && rm -rf /tmp/hf_cache || { echo "Download failed"; exit 1; }
 
 # Verify model config exists
 RUN test -f /opt/glm-model/config.json && echo "Model ready at /opt/glm-model" || { echo "Model files not found"; exit 1; }
