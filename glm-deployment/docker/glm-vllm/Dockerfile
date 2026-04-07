@@ -50,10 +50,4 @@ for f in sorted(os.listdir('/opt/glm-model'))[:20]:
 RUN test -f /opt/glm-model/config.json && echo "Model ready at /opt/glm-model"
 
 # Default vLLM entrypoint args (override via RunPod dockerArgs)
-CMD ["--model", "/opt/glm-model", \
-     "--tensor-parallel-size", "1", \
-     "--max-model-len", "4096", \
-     "--gpu-memory-utilization", "0.92", \
-     "--host", "0.0.0.0", \
-     "--port", "8000", \
-     "--trust-remote-code"]
+CMD ["--model", "/opt/glm-model", "--tensor-parallel-size", "1", "--max-model-len", "4096", "--gpu-memory-utilization", "0.92", "--host", "0.0.0.0", "--port", "8000", "--trust-remote-code"]
