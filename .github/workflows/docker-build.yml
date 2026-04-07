@@ -23,7 +23,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./glm-deployment/docker/glm-vllm
-          file: ./glm-deployment/docker/glm-vllm/Dockerfile
+          file: ./glm-deployment/docker/glm-vllm/Dockerfile.test
           tags: "${{ vars.DOCKER_USER }}/glm-vllm:4.7-flash-4bit"
           push: ${{ github.event_name != 'pull_request' }}
           # For pull requests, export results to the build cache.
