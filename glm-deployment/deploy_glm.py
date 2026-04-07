@@ -44,7 +44,7 @@ VOLUME_MOUNT_PATH = "/workspace"
 # Docker image — use custom image with model baked in for zero-delay startup
 # Build & push first: see docker/glm-vllm/Dockerfile
 # Falls back to stock image if custom not available.
-IMAGE = os.environ.get("GLM_IMAGE", "vllm/vllm-openai:latest")
+IMAGE = os.environ.get("GLM_IMAGE", "vivek8912/glm-vllm:4.7-flash-4bit")
 
 CONTAINER_DISK_GB = 30  # enough for model (~16GB) + vllm + overhead
 PORTS = "8000/http,22/tcp"
@@ -139,7 +139,7 @@ def check_vllm(pod_id, timeout=5):
 
 def wait_for_vllm(pod_id, max_wait=300):
     """Wait for vLLM to be ready, return models or None."""
-    print(f"  ⏳ Waiting for vLLM to load model (first run downloads from HF, ~3-5 min)...")
+    print(f"  ⏳ Waiting for vLLM to load model (custom image, ~30-60s)...")
     start = time.time()
     while time.time() - start < max_wait:
         models = check_vllm(pod_id)
