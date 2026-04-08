@@ -14,11 +14,12 @@
 
 FROM vllm/vllm-openai:v0.6.6
 
-# Update existing packages for GLM compatibility
-# Install huggingface_hub and tokenizers versions compatible with transformers 4.57.6
-RUN pip install --no-cache-dir 'huggingface_hub>=0.34.0,<1.0'
-RUN pip install --no-cache-dir 'tokenizers>=0.22.0,<=0.23.0'
-RUN pip install --no-deps 'transformers<5,>=4.56.0'
+# Install transformers + ALL its dependencies (no --no-deps!)
+# vLLM base image ships old deps (tokenizers 0.21, huggingface-hub 0.27)
+# transformers 4.57+ requires newer versions of these
+# Removing --no-deps lets pip resolve the full dependency tree automatically,
+# preventing the whack-a-mole of missing dependency errors
+RUN pip install --no-cache-dir 'transformers>=4.56.0,<5'
 RUN mkdir -p /opt/glm-model
 COPY download_model.py /tmp/download_model.py
 RUN python3 /tmp/download_model.py 2>&1 && rm -rf /tmp/hf_cache || { echo "Download failed"; exit 1; }
