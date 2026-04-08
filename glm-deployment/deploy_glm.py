@@ -50,11 +50,9 @@ CONTAINER_DISK_GB = 30  # enough for model (~16GB) + vllm + overhead
 PORTS = "8000/http,22/tcp"
 ENV_JSON = '{"VLLM_WORKER_MULTIPROC_METHOD":"spawn"}'
 
-# vLLM args — works with custom image (model at /opt/glm-model) OR stock image (HF auto-download)
-# Custom image: model pre-loaded, no HF download needed, transformers 5.x baked in
-# Stock image: will try to download from HF, may fail if transformers is too old
+# vLLM args — model path baked into ENTRYPOINT, these are extra flags
+# --trust-remote-code is critical for glm4_moe_lite architecture (transformers 5.x)
 VLLM_ARGS = (
-    "--model /opt/glm-model "
     "--tensor-parallel-size 1 "
     "--max-model-len 4096 "
     "--gpu-memory-utilization 0.92 "
